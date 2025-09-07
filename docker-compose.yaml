@@ -13,9 +13,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - nestjs-practice
+      - plants-api-nestjs
   
-  app:
+  node:
     build:
         context: .
         dockerfile: Dockerfile
@@ -35,10 +35,10 @@ services:
     depends_on:
       - postgres
     networks:
-      - nestjs-practice
+      - plants-api-nestjs
 
 volumes:
   postgres_data:
 
 networks:
-  nestjs-practice:
+  plants-api-nestjs:
