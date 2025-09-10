@@ -1,4 +1,4 @@
-export enum SubscriptionType {
+export enum SubscriptionTypeEnum {
   FREE = 'free',
   PREMIUM = 'premium',
 }

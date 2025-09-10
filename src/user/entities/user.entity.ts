@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,12 +6,15 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { SubscriptionType } from 'src/common/enums/subscription-type.enum';
-import { UserRole } from 'src/common/enums/user-role.enum';
+import { SubscriptionTypeEnum } from 'src/common/enums/subscription-type.enum';
+import { UserRoleEnum } from 'src/common/enums/user-role.enum';
+import { GardenEntity } from 'src/garden/entities/garden.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -54,17 +56,21 @@ export class UserEntity {
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.USER,
+    enum: UserRoleEnum,
+    default: UserRoleEnum.USER,
   })
-  role: UserRole;
+  role: UserRoleEnum;
 
   @Column({
     type: 'enum',
-    enum: SubscriptionType,
-    default: SubscriptionType.FREE,
+    enum: SubscriptionTypeEnum,
+    default: SubscriptionTypeEnum.FREE,
   })
-  subscription_status: SubscriptionType;
+  subscription_status: SubscriptionTypeEnum;
+
+  @OneToOne(() => GardenEntity, (garden) => garden.id, { cascade: true })
+  @JoinTable()
+  garden: GardenEntity;
 
   @CreateDateColumn()
   created_at: Date;
