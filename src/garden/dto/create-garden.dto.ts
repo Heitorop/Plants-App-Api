@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { LocationEnum } from 'src/common/enums/location.enum';
 
 export class CreateGardenDto {
@@ -6,7 +6,7 @@ export class CreateGardenDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsEnum(LocationEnum, { message: 'Location must be indoor or outdoor.' })
   @IsNotEmpty()
   location: LocationEnum;
 }

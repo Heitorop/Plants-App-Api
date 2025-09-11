@@ -13,8 +13,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -68,9 +67,8 @@ export class UserEntity {
   })
   subscription_status: SubscriptionTypeEnum;
 
-  @OneToOne(() => GardenEntity, (garden) => garden.id, { cascade: true })
-  @JoinTable()
-  garden: GardenEntity;
+  @OneToMany(() => GardenEntity, (garden) => garden.user, { cascade: true })
+  gardens: GardenEntity[];
 
   @CreateDateColumn()
   created_at: Date;

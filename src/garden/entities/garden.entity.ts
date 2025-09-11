@@ -4,7 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,7 +26,7 @@ export class GardenEntity {
   })
   location: LocationEnum;
 
-  @OneToOne(() => UserEntity, (user) => user.id, { cascade: true })
+  @ManyToOne(() => UserEntity, (user) => user.gardens, { onDelete: 'CASCADE' })
   user: UserEntity;
 
   @CreateDateColumn({

@@ -19,8 +19,8 @@ export class UserService {
   //   return `This action returns all user`;
   // }
 
-  async findOne(email: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ where: { email } });
+  async findOne(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException('User not found');

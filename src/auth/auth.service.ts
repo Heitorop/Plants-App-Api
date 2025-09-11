@@ -93,7 +93,6 @@ export class AuthService {
       password: await hash(password),
     });
     const savedUser = await this.userRepository.save(newUser);
-    console.log(savedUser);
 
     return this.auth(res, savedUser.id, savedUser.role);
   }
