@@ -31,35 +31,35 @@ export class GardenController {
     return garden;
   }
 
-  @HttpCode(HttpStatus.OK)
-  @Get()
-  async all(): Promise<GardenEntity[]> {
-    const gardens = await this.gardenService.findAll();
-    return gardens;
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Get()
+  // async all(): Promise<GardenEntity[]> {
+  //   const gardens = await this.gardenService.findAll();
+  //   return gardens;
+  // }
 
-  @HttpCode(HttpStatus.OK)
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<GardenEntity> {
-    const garden = await this.gardenService.findOne(id);
-    return garden;
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Get(':id')
+  // async findOne(@Param('id') id: string): Promise<GardenEntity> {
+  //   const garden = await this.gardenService.findOne(id);
+  //   return garden;
+  // }
 
-  @HttpCode(HttpStatus.OK)
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateGardenDto: UpdateGardenDto,
-  ): Promise<GardenEntity> {
-    const garden = await this.gardenService.update(id, updateGardenDto);
-    return garden;
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Patch(':id')
+  // async update(
+  //   @Param('id') id: string,
+  //   @Body() updateGardenDto: UpdateGardenDto,
+  // ): Promise<GardenEntity> {
+  //   const garden = await this.gardenService.update(id, updateGardenDto);
+  //   return garden;
+  // }
 
-  @HttpCode(HttpStatus.OK)
-  @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-  ): Promise<{ success: boolean; message: string }> {
-    return await this.gardenService.remove(id);
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Delete(':id')
+  // async remove(
+  //   @Param('id') id: string,
+  // ): Promise<{ success: boolean; message: string }> {
+  //   return await this.gardenService.remove(id);
+  // }
 }

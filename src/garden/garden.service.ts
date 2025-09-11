@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateGardenDto } from './dto/create-garden.dto';
@@ -13,6 +14,8 @@ import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class GardenService {
+  private readonly logger = new Logger(GardenService.name);
+
   constructor(
     @InjectRepository(GardenEntity)
     private readonly gardenRepository: Repository<GardenEntity>,
@@ -27,69 +30,98 @@ export class GardenService {
       const garden = this.gardenRepository.create({ ...data, user });
 
       return await this.gardenRepository.save(garden);
-    } catch (error) {
-      throw new InternalServerErrorException('Error creating garden: ' + error);
-    }
-  }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
 
-  async findAll(): Promise<GardenEntity[]> {
-    try {
-      const gardens = await this.gardenRepository.find();
-      return gardens;
-    } catch (error) {
+      this.logger.error('Error creating garden: ' + message);
+
       throw new InternalServerErrorException(
-        'Error fetching gardens: ' + error,
+        'Error creating garden: ' + message,
       );
     }
   }
 
-  async findOne(id: string): Promise<GardenEntity> {
-    try {
-      const garden = await this.gardenRepository.findOne({ where: { id: id } });
+  // async findAll(): Promise<GardenEntity[]> {
+  //   try {
+  //     const gardens = await this.gardenRepository.find();
+  //     return gardens;
+  //   } catch (error: unknown) {
+  //     const message = error instanceof Error ? error.message : String(error);
 
-      if (!garden) {
-        console.log('Garden not found with id:', id);
-        throw new NotFoundException('Garden not found');
-      }
-      return garden;
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
+  //     this.logger.error('Error creating garden: ' + message);
 
-      throw new InternalServerErrorException('Error fetching garden: ' + error);
-    }
-  }
+  //     throw new InternalServerErrorException(
+  //       'Error fetching gardens: ' + message,
+  //     );
+  //   }
+  // }
 
-  async update(
-    id: string,
-    updateGardenDto: UpdateGardenDto,
-  ): Promise<GardenEntity> {
-    try {
-      const garden = await this.gardenRepository.preload({
-        id,
-        ...updateGardenDto,
-      });
-      if (!garden) {
-        console.log('Garden not found with id:', id);
-        throw new NotFoundException('Garden not found');
-      }
-      return this.gardenRepository.save(garden);
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
+  // async findOne(id: string): Promise<GardenEntity> {
+  //   try {
+  //     const garden = await this.gardenRepository.findOne({ where: { id: id } });
 
-      throw new InternalServerErrorException('Error updating garden: ' + error);
-    }
-  }
+  //     if (!garden) {
+  //       console.log('Garden not found with id:', id);
+  //       throw new NotFoundException('Garden not found');
+  //     }
+  //     return garden;
+  //   } catch (error: unknown) {
+  //     if (error instanceof NotFoundException) throw error;
 
-  async remove(id: string): Promise<{ success: boolean; message: string }> {
-    try {
-      const garden = await this.findOne(id);
-      await this.gardenRepository.remove(garden);
-      return { success: true, message: `Garden with id ${id} removed.` };
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Error removing garden: ' + error);
-    }
-  }
+  //     const message = error instanceof Error ? error.message : String(error);
+
+  //     this.logger.error('Error creating garden: ' + message);
+
+  //     throw new InternalServerErrorException(
+  //       'Error fetching garden: ' + message,
+  //     );
+  //   }
+  // }
+
+  // async update(
+  //   id: string,
+  //   updateGardenDto: UpdateGardenDto,
+  // ): Promise<GardenEntity> {
+  //   try {
+  //     const garden = await this.gardenRepository.preload({
+  //       id,
+  //       ...updateGardenDto,
+  //     });
+  //     if (!garden) {
+  //       console.log('Garden not found with id:', id);
+  //       throw new NotFoundException('Garden not found');
+  //     }
+  //     return this.gardenRepository.save(garden);
+  //   } catch (error: unknown) {
+  //     if (error instanceof NotFoundException) throw error;
+
+  //     const message = error instanceof Error ? error.message : String(error);
+
+  //     this.logger.error('Error creating garden: ' + message);
+
+  //     throw new InternalServerErrorException(
+  //       'Error updating garden: ' + message,
+  //     );
+  //   }
+  // }
+
+  // async remove(id: string): Promise<{ success: boolean; message: string }> {
+  //   try {
+  //     const garden = await this.findOne(id);
+  //     await this.gardenRepository.remove(garden);
+  //     return { success: true, message: `Garden with id ${id} removed.` };
+  //   } catch (error: unknown) {
+  //     if (error instanceof NotFoundException) throw error;
+
+  //     const message = error instanceof Error ? error.message : String(error);
+
+  //     this.logger.error('Error creating garden: ' + message);
+
+  //     throw new InternalServerErrorException(
+  //       'Error removing garden: ' + message,
+  //     );
+  //   }
+  // }
 
   async createUserGarden(
     userId: string,
@@ -107,6 +139,8 @@ export class GardenService {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
 
+      this.logger.error('Error creating garden: ' + message);
+
       throw new InternalServerErrorException(
         'Error fetching user gardens: ' + message,
       );
@@ -120,7 +154,7 @@ export class GardenService {
       });
 
       if (!gardens || gardens.length === 0) {
-        console.log('No gardens found for this user:', userId);
+        this.logger.error(`No gardens found for this user ${userId}`);
         throw new NotFoundException(`No gardens found for this user ${userId}`);
       }
 
@@ -129,6 +163,8 @@ export class GardenService {
       if (error instanceof NotFoundException) throw error;
 
       const message = error instanceof Error ? error.message : String(error);
+
+      this.logger.error('Error fetching user gardens: ' + message);
 
       throw new InternalServerErrorException(
         'Error fetching user gardens: ' + message,
@@ -150,6 +186,10 @@ export class GardenService {
       });
 
       if (!garden) {
+        this.logger.error(
+          `Garden with id ${gardenId} not found for user with id ${userId}`,
+        );
+
         throw new NotFoundException(
           `Garden with id ${gardenId} not found for user with id ${userId}`,
         );
@@ -163,8 +203,10 @@ export class GardenService {
 
       const message = error instanceof Error ? error.message : String(error);
 
+      this.logger.error('Error editing user gardens: ' + message);
+
       throw new InternalServerErrorException(
-        'Error fetching user gardens: ' + message,
+        'Error editing user gardens: ' + message,
       );
     }
   }
@@ -173,20 +215,35 @@ export class GardenService {
     userId: string,
     gardenId: string,
   ): Promise<GardenEntity> {
-    const garden = await this.gardenRepository.findOne({
-      where: {
-        user: {
-          id: userId,
+    try {
+      const garden = await this.gardenRepository.findOne({
+        where: {
+          user: {
+            id: userId,
+          },
         },
-      },
-    });
+      });
 
-    if (!garden) {
-      throw new NotFoundException(
-        `Garden with id ${gardenId} not found for user with id ${userId}`,
+      if (!garden) {
+        this.logger.error(
+          `Garden with id ${gardenId} not found for user with id ${userId}`,
+        );
+        throw new NotFoundException(
+          `Garden with id ${gardenId} not found for user with id ${userId}`,
+        );
+      }
+
+      return await this.gardenRepository.remove(garden);
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) throw error;
+
+      const message = error instanceof Error ? error.message : String(error);
+
+      this.logger.error('Error removing user gardens: ' + message);
+
+      throw new InternalServerErrorException(
+        'Error removing garden: ' + message,
       );
     }
-
-    return await this.gardenRepository.remove(garden);
   }
 }
