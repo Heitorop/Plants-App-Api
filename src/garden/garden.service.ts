@@ -153,7 +153,7 @@ export class GardenService {
         where: { user: { id: userId } },
       });
 
-      if (!gardens || gardens.length === 0) {
+      if (!gardens) {
         this.logger.error(`No gardens found for this user ${userId}`);
         throw new NotFoundException(`No gardens found for this user ${userId}`);
       }
@@ -214,10 +214,11 @@ export class GardenService {
   async removeUserGarden(
     userId: string,
     gardenId: string,
-  ): Promise<GardenEntity> {
+  ): Promise<{ message: string }> {
     try {
       const garden = await this.gardenRepository.findOne({
         where: {
+          id: gardenId,
           user: {
             id: userId,
           },
@@ -233,7 +234,9 @@ export class GardenService {
         );
       }
 
-      return await this.gardenRepository.remove(garden);
+      await this.gardenRepository.remove(garden);
+
+      return { message: 'Garden deleted successfully' };
     } catch (error: unknown) {
       if (error instanceof NotFoundException) throw error;
 
