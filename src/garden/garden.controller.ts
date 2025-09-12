@@ -11,14 +11,20 @@ import {
 } from '@nestjs/common';
 import { GardenService } from './garden.service';
 import { CreateGardenDto } from './dto/create-garden.dto';
-import { UpdateGardenDto } from './dto/update-garden.dto';
 import { GardenEntity } from './entities/garden.entity';
 import { Authorization } from 'src/auth/decorators/authorization.decorator';
 import { Authorized } from 'src/auth/decorators/authorized.decorator';
+import { PlantEntity } from 'src/plant/entities/plant.entity';
+import { PlantService } from 'src/plant/plant.service';
+import { CreatePlantDto } from 'src/plant/dto/create-plant.dto';
+import { UpdatePlantDto } from 'src/plant/dto/update-plant.dto';
 
 @Controller('gardens')
 export class GardenController {
-  constructor(private readonly gardenService: GardenService) {}
+  constructor(
+    private readonly gardenService: GardenService,
+    private readonly plantService: PlantService,
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Authorization()
@@ -31,35 +37,80 @@ export class GardenController {
     return garden;
   }
 
-  // @HttpCode(HttpStatus.OK)
-  // @Get()
-  // async all(): Promise<GardenEntity[]> {
-  //   const gardens = await this.gardenService.findAll();
-  //   return gardens;
-  // }
+  @Authorization()
+  @Get('/:gardenId/plants')
+  async getAllUserPlants(
+    @Authorized('id') userId: string,
+    @Param('gardenId') gardenId: string,
+  ): Promise<PlantEntity[]> {
+    const plants = await this.plantService.getAllUserPlants(userId, gardenId);
 
-  // @HttpCode(HttpStatus.OK)
-  // @Get(':id')
-  // async findOne(@Param('id') id: string): Promise<GardenEntity> {
-  //   const garden = await this.gardenService.findOne(id);
-  //   return garden;
-  // }
+    return plants;
+  }
 
-  // @HttpCode(HttpStatus.OK)
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() updateGardenDto: UpdateGardenDto,
-  // ): Promise<GardenEntity> {
-  //   const garden = await this.gardenService.update(id, updateGardenDto);
-  //   return garden;
-  // }
+  @Authorization()
+  @Post('/:gardenId/plants')
+  async createUserPlants(
+    @Authorized('id') userId: string,
+    @Param('gardenId') gardenId: string,
+    @Body() data: CreatePlantDto,
+  ): Promise<PlantEntity> {
+    const plant = await this.plantService.createUserPlant(
+      userId,
+      gardenId,
+      data,
+    );
 
-  // @HttpCode(HttpStatus.OK)
-  // @Delete(':id')
-  // async remove(
-  //   @Param('id') id: string,
-  // ): Promise<{ success: boolean; message: string }> {
-  //   return await this.gardenService.remove(id);
-  // }
+    return plant;
+  }
+
+  @Authorization()
+  @Patch('/:gardenId/plants/:plantId')
+  async updateUserPlants(
+    @Authorized('id') userId: string,
+    @Param('gardenId') gardenId: string,
+    @Param('plantId') plantId: string,
+    @Body() data: UpdatePlantDto,
+  ) {
+    const plant = await this.plantService.updateUserPlant(
+      userId,
+      gardenId,
+      plantId,
+      data,
+    );
+
+    return plant;
+  }
+
+  @Authorization()
+  @Get('/:gardenId/plants/:plantId')
+  async getUserPlant(
+    @Authorized('id') userId: string,
+    @Param('gardenId') gardenId: string,
+    @Param('plantId') plantId: string,
+  ): Promise<PlantEntity> {
+    const plant = await this.plantService.getUserPlant(
+      userId,
+      gardenId,
+      plantId,
+    );
+
+    return plant;
+  }
+
+  @Authorization()
+  @Delete('/:gardenId/plants/:plantId')
+  async removeUserPlants(
+    @Authorized('id') userId: string,
+    @Param('gardenId') gardenId: string,
+    @Param('plantId') plantId: string,
+  ): Promise<{ message: string }> {
+    const response = await this.plantService.removeUserPlant(
+      userId,
+      gardenId,
+      plantId,
+    );
+
+    return response;
+  }
 }
