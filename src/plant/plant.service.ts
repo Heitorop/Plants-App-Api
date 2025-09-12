@@ -102,7 +102,7 @@ export class PlantService {
     gardenId: string,
     plantId: string,
     data: UpdatePlantDto,
-  ): Promise<UpdatePlantDto> {
+  ): Promise<PlantEntity> {
     try {
       const plant = await this.getUserPlant(userId, gardenId, plantId);
 

@@ -6,6 +6,5 @@ export class CreatePlantDto {
   nickname: string;
 
   @IsString()
-  @IsNotEmpty()
   species: string;
 }

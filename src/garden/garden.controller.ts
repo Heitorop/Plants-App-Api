@@ -71,7 +71,7 @@ export class GardenController {
     @Param('gardenId') gardenId: string,
     @Param('plantId') plantId: string,
     @Body() data: UpdatePlantDto,
-  ) {
+  ): Promise<PlantEntity> {
     const plant = await this.plantService.updateUserPlant(
       userId,
       gardenId,
