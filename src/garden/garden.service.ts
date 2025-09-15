@@ -172,6 +172,32 @@ export class GardenService {
     }
   }
 
+  async getUserGarden(userId: string, gardenId: string): Promise<GardenEntity> {
+    try {
+      const garden = await this.gardenRepository.findOne({
+        where: { id: gardenId, user: { id: userId } },
+      });
+
+      if (!garden) {
+        const msg = `Garden with id ${gardenId} not found for user ${userId}`;
+        this.logger.error(msg);
+        throw new NotFoundException(msg);
+      }
+
+      return garden;
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) throw error;
+
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `Error fetching garden ${gardenId} for user ${userId}: ${message}`,
+      );
+      throw new InternalServerErrorException(
+        `Error fetching garden ${gardenId} for user ${userId}: ${message}`,
+      );
+    }
+  }
+
   async updateUserGarden(
     userId: string,
     gardenId: string,
