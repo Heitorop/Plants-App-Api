@@ -1,6 +1,6 @@
 # Plants App API 🌱
 
-A comprehensive REST API built with NestJS for managing plant collections, gardens, and user subscriptions. This API provides a robust backend for plant enthusiasts to organize their gardens and track their plant collections.
+REST API built with NestJS for managing plant collections, gardens, and user subscriptions. This API provides a robust backend for plant enthusiasts to organize their gardens and track their plant collections.
 
 ## 🚀 Features
 
