@@ -1,4 +1,6 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -17,6 +19,7 @@ export class PlantService {
   constructor(
     @InjectRepository(PlantEntity)
     private readonly plantRepository: Repository<PlantEntity>,
+    @Inject(forwardRef(() => GardenService))
     private readonly gardenService: GardenService,
   ) {}
 
@@ -24,56 +27,75 @@ export class PlantService {
     userId: string,
     gardenId: string,
   ): Promise<PlantEntity[]> {
-    const plants = await this.plantRepository.find({
-      where: {
-        garden: {
-          id: gardenId,
-          user: {
-            id: userId,
+    try {
+      const plants = await this.plantRepository.find({
+        where: {
+          garden: {
+            id: gardenId,
+            user: {
+              id: userId,
+            },
           },
         },
-      },
-    });
+      });
+      return plants;
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
 
-    if (!plants) {
       this.logger.error(
-        `No plants found for this user ${userId} or this garden ${gardenId}`,
+        `Error fetching plants for garden: ${gardenId} ` + message,
       );
-      throw new NotFoundException(
-        `No plants found for this user ${userId} or this garden ${gardenId}`,
+
+      throw new InternalServerErrorException(
+        `Error fetching plants for garden: ${gardenId} ` + message,
       );
     }
-
-    return plants;
   }
   async getUserPlant(
     userId: string,
     gardenId: string,
     plantId: string,
   ): Promise<PlantEntity> {
-    const plant = await this.plantRepository.findOne({
-      where: {
-        id: plantId,
-        garden: {
-          id: gardenId,
-          user: {
-            id: userId,
+    try {
+      const plant = await this.plantRepository.findOne({
+        where: {
+          id: plantId,
+          garden: {
+            id: gardenId,
+            user: {
+              id: userId,
+            },
           },
         },
-      },
-    });
+        relations: ['careLogs'],
+      });
 
-    if (!plant) {
+      if (!plant) {
+        this.logger.error(
+          `Plant with id ${plantId} not found for garden with id ${gardenId}`,
+        );
+
+        throw new NotFoundException(
+          `Plant with id ${plantId} not found for garden with id ${gardenId}`,
+        );
+      }
+
+      return plant;
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) throw error;
+
+      const message = error instanceof Error ? error.message : String(error);
+
       this.logger.error(
-        `Plant with id ${plantId} not found for garden with id ${gardenId}`,
+        `Plant with id ${plantId} not found for garden with id ${gardenId} ` +
+          message,
       );
 
-      throw new NotFoundException(
-        `Plant with id ${plantId} not found for garden with id ${gardenId}`,
+      throw new InternalServerErrorException(
+        `Plant with id ${plantId} not found for garden with id ${gardenId} ` +
+          message,
       );
     }
-
-    return plant;
   }
 
   async createUserPlant(

@@ -1,16 +1,21 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PlantService } from './plant.service';
 import { PlantController } from './plant.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlantEntity } from './entities/plant.entity';
 import { GardenEntity } from 'src/garden/entities/garden.entity';
-import { GardenService } from 'src/garden/garden.service';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
+import { CareLogEntity } from 'src/care-log/entities/care-log.entity';
+import { GardenModule } from 'src/garden/garden.module';
+import { CareLogModule } from 'src/care-log/care-log.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PlantEntity, GardenEntity, UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PlantEntity, GardenEntity, CareLogEntity]),
+    forwardRef(() => GardenModule),
+    forwardRef(() => CareLogModule),
+  ],
+  exports: [PlantService],
   controllers: [PlantController],
-  providers: [PlantService, GardenService, UserService],
+  providers: [PlantService],
 })
 export class PlantModule {}

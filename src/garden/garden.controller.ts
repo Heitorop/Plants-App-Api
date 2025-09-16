@@ -8,6 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { GardenService } from './garden.service';
 import { CreateGardenDto } from './dto/create-garden.dto';
@@ -22,8 +24,9 @@ import { UpdatePlantDto } from 'src/plant/dto/update-plant.dto';
 @Controller('gardens')
 export class GardenController {
   constructor(
-    private readonly gardenService: GardenService,
+    @Inject(forwardRef(() => PlantService))
     private readonly plantService: PlantService,
+    private readonly gardenService: GardenService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)

@@ -1,3 +1,4 @@
+import { CareLogEntity } from 'src/care-log/entities/care-log.entity';
 import { GardenEntity } from 'src/garden/entities/garden.entity';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,6 +21,9 @@ export class PlantEntity {
   })
   @JoinColumn({ name: 'garden_id' })
   garden: GardenEntity;
+
+  @OneToMany(() => CareLogEntity, (careLog) => careLog.plant)
+  careLogs: CareLogEntity[];
 
   @Column({
     type: 'varchar',

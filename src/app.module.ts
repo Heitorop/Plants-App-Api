@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PlantModule } from './plant/plant.module';
 import { GardenModule } from './garden/garden.module';
+import { CareLogModule } from './care-log/care-log.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { GardenModule } from './garden/garden.module';
     AuthModule,
     PlantModule,
     GardenModule,
+    CareLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

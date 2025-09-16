@@ -30,13 +30,13 @@ export class GardenEntity {
   })
   location: LocationEnum;
 
-  @ManyToOne(() => UserEntity, (user) => user.gardens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (user) => user.gardens, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @OneToMany(() => PlantEntity, (plant) => plant.garden, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => PlantEntity, (plant) => plant.garden)
   plants: PlantEntity[];
 
   @CreateDateColumn({
