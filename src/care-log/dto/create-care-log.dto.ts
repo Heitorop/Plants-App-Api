@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { ActionTypeEnum } from 'src/common/enums/action-type.enum';
 
 export class CreateCareLogDto {
@@ -6,6 +6,5 @@ export class CreateCareLogDto {
   action_type: ActionTypeEnum;
 
   @IsString()
-  @IsNotEmpty()
   notes: string;
 }

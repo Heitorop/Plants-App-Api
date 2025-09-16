@@ -67,9 +67,7 @@ export class UserEntity {
   })
   subscription_status: SubscriptionTypeEnum;
 
-  @OneToMany(() => GardenEntity, (garden) => garden.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => GardenEntity, (garden) => garden.user)
   gardens: GardenEntity[];
 
   @CreateDateColumn()

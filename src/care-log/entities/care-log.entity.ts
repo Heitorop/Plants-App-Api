@@ -27,7 +27,9 @@ export class CareLogEntity {
   })
   notes: string;
 
-  @ManyToOne(() => PlantEntity, (plant) => plant.careLogs)
+  @ManyToOne(() => PlantEntity, (plant) => plant.careLogs, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'plant_id',
   })

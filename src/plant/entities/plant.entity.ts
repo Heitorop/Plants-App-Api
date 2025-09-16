@@ -16,13 +16,13 @@ export class PlantEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => GardenEntity, (garden) => garden.plants)
+  @ManyToOne(() => GardenEntity, (garden) => garden.plants, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'garden_id' })
   garden: GardenEntity;
 
-  @OneToMany(() => CareLogEntity, (careLog) => careLog.plant, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => CareLogEntity, (careLog) => careLog.plant)
   careLogs: CareLogEntity[];
 
   @Column({
