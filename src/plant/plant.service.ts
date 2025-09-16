@@ -35,15 +35,6 @@ export class PlantService {
       },
     });
 
-    if (!plants) {
-      this.logger.error(
-        `No plants found for this user ${userId} or this garden ${gardenId}`,
-      );
-      throw new NotFoundException(
-        `No plants found for this user ${userId} or this garden ${gardenId}`,
-      );
-    }
-
     return plants;
   }
   async getUserPlant(
@@ -61,6 +52,7 @@ export class PlantService {
           },
         },
       },
+      relations: ['careLogs'],
     });
 
     if (!plant) {

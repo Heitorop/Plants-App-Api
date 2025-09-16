@@ -30,7 +30,7 @@ export class GardenEntity {
   })
   location: LocationEnum;
 
-  @ManyToOne(() => UserEntity, (user) => user.gardens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (user) => user.gardens)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 

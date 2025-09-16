@@ -1,0 +1,15 @@
+export enum ActionTypeEnum {
+  WATERING = 'watering',
+  FERTILIZING = 'fertilizing',
+  PRUNING = 'pruning',
+  REPOTTING = 'repotting',
+  MISTING = 'misting',
+  CLEANING = 'cleaning',
+  PEST_CONTROL = 'pest_control',
+  DISEASE_TREATMENT = 'disease_treatment',
+  SUPPORT = 'support',
+  PROPAGATION = 'propagation',
+  HARVESTING = 'harvesting',
+  BLOOM_CARE = 'bloom_care',
+  DORMANCY_CARE = 'dormancy_care',
+}
