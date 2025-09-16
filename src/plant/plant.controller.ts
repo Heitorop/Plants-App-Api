@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Patch,
   Post,
@@ -17,7 +19,10 @@ import { UpdateCareLogDto } from 'src/care-log/dto/update-care-log.dto';
 
 @Controller('plants')
 export class PlantController {
-  constructor(private readonly careLogService: CareLogService) {}
+  constructor(
+    @Inject(forwardRef(() => CareLogService))
+    private readonly careLogService: CareLogService,
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Authorization()

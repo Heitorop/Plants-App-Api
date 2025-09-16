@@ -2,14 +2,15 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import { Authorization } from 'src/auth/decorators/authorization.decorator';
 import { UserEntity } from './entities/user.entity';
 import { Authorized } from 'src/auth/decorators/authorized.decorator';
@@ -21,7 +22,7 @@ import { CreateGardenDto } from 'src/garden/dto/create-garden.dto';
 @Controller('users')
 export class UserController {
   constructor(
-    private readonly userService: UserService,
+    @Inject(forwardRef(() => GardenService))
     private readonly gardenService: GardenService,
   ) {}
 

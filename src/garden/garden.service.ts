@@ -1,4 +1,6 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -10,7 +12,6 @@ import { GardenEntity } from './entities/garden.entity';
 import { Repository } from 'typeorm';
 import { UpdateGardenDto } from './dto/update-garden.dto';
 import { UserService } from 'src/user/user.service';
-import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class GardenService {
@@ -19,8 +20,7 @@ export class GardenService {
   constructor(
     @InjectRepository(GardenEntity)
     private readonly gardenRepository: Repository<GardenEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
   async create(data: CreateGardenDto, userId: string): Promise<GardenEntity> {

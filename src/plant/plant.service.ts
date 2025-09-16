@@ -1,4 +1,6 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -17,6 +19,7 @@ export class PlantService {
   constructor(
     @InjectRepository(PlantEntity)
     private readonly plantRepository: Repository<PlantEntity>,
+    @Inject(forwardRef(() => GardenService))
     private readonly gardenService: GardenService,
   ) {}
 
