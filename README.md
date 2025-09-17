@@ -77,6 +77,9 @@ REST API built with NestJS for managing plant collections, gardens, and user sub
    # JWT Configuration
    JWT_SECRET=your_jwt_secret_key
    JWT_REFRESH_SECRET=your_jwt_refresh_secret_key
+
+   # Stripe Configuration
+   STRIPE_API_KEY=your_api_key
    ```
 
 4. **Database Setup**
