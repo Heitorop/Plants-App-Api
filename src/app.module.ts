@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { PlantModule } from './plant/plant.module';
 import { GardenModule } from './garden/garden.module';
 import { CareLogModule } from './care-log/care-log.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CareLogModule } from './care-log/care-log.module';
     PlantModule,
     GardenModule,
     CareLogModule,
+    StripeModule.forRootAsync(),
   ],
   controllers: [AppController],
   providers: [AppService],
